@@ -2,6 +2,7 @@
 import express from "express";
 import { connectDb } from "./config/dbconfig.js";
 
+import foodRoute from "./routes/foods.route.js";
 const app = express();
 const port = 8800;
 
@@ -17,6 +18,8 @@ app.use((err, req, res, next) => {
     message,
   });
 });
+
+app.use("/api/food", foodRoute);
 
 app.listen(port, () => {
   connectDb();
