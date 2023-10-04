@@ -6,7 +6,7 @@ export const createUser = async (req, res) => {
   const { username, email, password } = req.body;
 
   // Validate username is alphanumeric
-  const isUsernameAlphanumeric = validator.isAlphanumeric(String(username));
+  const isUsernameAlphanumeric = validator.isAlphanumeric(username);
   if (!isUsernameAlphanumeric) {
     return res.status(400).json({
       isSuccess: false,
@@ -15,7 +15,7 @@ export const createUser = async (req, res) => {
   }
 
   // Validate email format
-  const isEmailValid = validator.isEmail(String(email));
+  const isEmailValid = validator.isEmail(email);
   if (!isEmailValid) {
     return res
       .status(400)
@@ -23,7 +23,7 @@ export const createUser = async (req, res) => {
   }
 
   // Validate password is alphanumeric
-  const isPasswordAlphanumeric = validator.isAlphanumeric(String(password));
+  const isPasswordAlphanumeric = validator.isAlphanumeric(password);
   if (!isPasswordAlphanumeric) {
     return res.status(400).json({
       isSuccess: false,
