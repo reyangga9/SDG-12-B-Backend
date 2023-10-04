@@ -2,7 +2,7 @@ import jwt from "jsonwebtoken";
 import bcrypt from "bcryptjs";
 
 export const generateJwtToken = (payload) => {
-  const token = jwt.sign(payload, process.env.PRIVATE_KEY, {
+  const token = jwt.sign(payload, process.env.JWT_PRIVATE_KEY, {
     expiresIn: 60 * 60 * 24, // Momentary expire time
   });
   return token;
