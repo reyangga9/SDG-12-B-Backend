@@ -1,12 +1,12 @@
 import validator from "validator";
+import User from "../models/User.models.js";
+import { hashPassword } from "../utils/auth.utils.js";
 
 export const createUser = async (req, res) => {
   const { username, email, password } = req.body;
 
-  console.log(username, email, password);
-
   // Validate username is alphanumeric
-  const isUsernameAlphanumeric = validator.isAlphanumeric(username);
+  const isUsernameAlphanumeric = validator.isAlphanumeric(String(username));
   if (!isUsernameAlphanumeric) {
     return res.status(400).json({
       isSuccess: false,
@@ -15,7 +15,7 @@ export const createUser = async (req, res) => {
   }
 
   // Validate email format
-  const isEmailValid = validator.isEmail(email);
+  const isEmailValid = validator.isEmail(String(email));
   if (!isEmailValid) {
     return res
       .status(400)
@@ -23,7 +23,7 @@ export const createUser = async (req, res) => {
   }
 
   // Validate password is alphanumeric
-  const isPasswordAlphanumeric = validator.isAlphanumeric(password);
+  const isPasswordAlphanumeric = validator.isAlphanumeric(String(password));
   if (!isPasswordAlphanumeric) {
     return res.status(400).json({
       isSuccess: false,
@@ -31,9 +31,22 @@ export const createUser = async (req, res) => {
     });
   }
 
-  // Handling User Model later on
-  try {
-  } catch (err) {}
+  const hashedPassword = hashPassword(password);
 
-  res.status(200).json({ username, email, password });
+  const newUser = new User({
+    username,
+    email,
+    password: hashedPassword,
+  });
+
+  try {
+    await newUser.save();
+    res
+      .status(201)
+      .json({ isSuccess: true, message: "Successfully registered!" });
+  } catch (err) {
+    res.status(400).json({
+      message: err.message,
+    });
+  }
 };

@@ -1,4 +1,5 @@
 import jwt from "jsonwebtoken";
+import bcrypt from "bcryptjs";
 
 export const generateJwtToken = (payload) => {
   const token = jwt.sign(payload, process.env.PRIVATE_KEY, {
@@ -9,7 +10,7 @@ export const generateJwtToken = (payload) => {
 
 export const verifyJwtToken = (token) => {
   try {
-    const data = jwt.verify(token, process.env.PRIVATE_KEY);
+    const data = jwt.verify(token, process.env.JWT_PRIVATE_KEY);
     if (data) {
       return { isTokenValid: true, data };
     }
@@ -17,4 +18,11 @@ export const verifyJwtToken = (token) => {
     return { isTokenValid: false, data: err };
   }
   return { isTokenValid: false, data: null };
+};
+
+export const hashPassword = (plainPassword) => {
+  let salt = bcrypt.genSaltSync(10);
+  let hash = bcrypt.hashSync(plainPassword, salt);
+
+  return hash;
 };

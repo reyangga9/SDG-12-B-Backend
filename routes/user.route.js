@@ -5,6 +5,6 @@ import { createUser } from "../controllers/user.controller.js";
 const router = express.Router();
 
 // Create user
-router.post("/", createUser);
+router.post("/signup", createUser);
 
 export default router;
