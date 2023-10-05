@@ -1,12 +1,14 @@
 // const express = require('express')
 import express from "express";
 import { connectDb } from "./config/dbconfig.js";
-
+const cors = require("cors");
 import foodRoute from "./routes/foods.route.js";
 import userRoute from "./routes/user.route.js";
 
 const app = express();
 const port = 8800;
+
+app.use(cors());
 
 app.use(express.json());
 
