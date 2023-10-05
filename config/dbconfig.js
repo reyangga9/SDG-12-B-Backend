@@ -3,7 +3,7 @@ import dotenv from "dotenv";
 dotenv.config();
 
 export const connectDb = () => {
-  const mongoUrl = `${process.env.DATABASE}`;
+  const mongoUrl = `mongodb+srv://${process.env.MONGO_NAME}:${process.env.MONGO_PASSWORD}@${process.env.MONGO_CLUSTER}/${process.env.MONGO_DATABASE}?retryWrites=true&w=majority`;
   mongoose
     .connect(mongoUrl)
     .then(() => {
