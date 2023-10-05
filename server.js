@@ -1,7 +1,7 @@
 // const express = require('express')
 import express from "express";
 import { connectDb } from "./config/dbconfig.js";
-const cors = require("cors");
+import cors  from "cors";
 import foodRoute from "./routes/foods.route.js";
 import userRoute from "./routes/user.route.js";
 
