@@ -3,8 +3,9 @@ import dotenv from "dotenv";
 dotenv.config();
 
 export const connectDb = () => {
+  const mongoUrl = `${process.env.DATABASE}`;
   mongoose
-    .connect(process.env.DATABASE)
+    .connect(mongoUrl)
     .then(() => {
       console.log("Connected to db");
     })
