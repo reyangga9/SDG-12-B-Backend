@@ -1,6 +1,7 @@
 import validator from "validator";
 import User from "../models/User.models.js";
-import { hashPassword } from "../utils/auth.utils.js";
+import { hashPassword, generateJwtToken } from "../utils/auth.utils.js";
+import bcrypt from "bcryptjs";
 
 export const createUser = async (req, res) => {
   const { username, email, password } = req.body;
@@ -48,5 +49,41 @@ export const createUser = async (req, res) => {
     res.status(400).json({
       message: err.message,
     });
+  }
+};
+
+export const loginUser = async (req, res) => {
+  const { username, password } = req.body;
+
+  try {
+    const user = await User.findOne({
+      username: username,
+    });
+
+    if (user === null) {
+      return res
+        .status(404)
+        .json({ isSuccess: false, message: "User doesn't exist" });
+    }
+
+    const isPasswordValid = bcrypt.compareSync(password, user.password);
+    if (!isPasswordValid) {
+      return res
+        .status(400)
+        .json({ message: "Please input a correct username and password" });
+    }
+
+    const token = generateJwtToken({
+      _id: String(user._id),
+      username: user.username,
+      email: user.email,
+    });
+
+    res.status(200).json({
+      isSuccess: true,
+      user: { _id: user._id, username: user.username, email: user.email },
+    });
+  } catch (err) {
+    res.status(404).json({ isSuccess: false, message: "User doesn't exist" });
   }
 };
