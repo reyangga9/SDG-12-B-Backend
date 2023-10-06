@@ -1,6 +1,11 @@
 import express from "express";
 
-import { createUser, loginUser } from "../controllers/user.controller.js";
+import {
+  createUser,
+  loginUser,
+  logoutUser,
+} from "../controllers/user.controller.js";
+import { validateAuth } from "../middlewares/auth.middleware.js";
 
 const router = express.Router();
 
@@ -8,5 +13,7 @@ const router = express.Router();
 router.post("/signup", createUser);
 // Login user
 router.post("/login", loginUser);
+// Logout user
+router.post("/logout", validateAuth, logoutUser);
 
 export default router;

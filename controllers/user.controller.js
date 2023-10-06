@@ -79,11 +79,25 @@ export const loginUser = async (req, res) => {
       email: user.email,
     });
 
-    res.status(200).json({
-      isSuccess: true,
-      user: { _id: user._id, username: user.username, email: user.email },
-    });
+    res
+      .cookie("auth_token", token, {
+        httpOnly: true,
+        secure: true,
+      })
+      .status(200)
+      .json({
+        isSuccess: true,
+        user: { _id: user._id, username: user.username, email: user.email },
+      });
   } catch (err) {
     res.status(404).json({ isSuccess: false, message: "User doesn't exist" });
   }
+};
+
+export const logoutUser = async (req, res) => {
+  console.log(req.user);
+  return res
+    .clearCookie("auth_token")
+    .status(200)
+    .json({ isSuccess: true, message: "Successfully logged out" });
 };
