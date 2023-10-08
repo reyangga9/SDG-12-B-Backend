@@ -2,7 +2,7 @@ import jwt from "jsonwebtoken";
 import bcrypt from "bcryptjs";
 
 export const generateJwtToken = (payload) => {
-  const token = jwt.sign(payload, process.env.JWT_PRIVATE_KEY, {
+  const token = jwt.sign(payload, process.env.JWT_SECRET_KEY, {
     expiresIn: 60 * 60 * 24, // Momentary expire time
   });
   return token;
@@ -10,7 +10,7 @@ export const generateJwtToken = (payload) => {
 
 export const verifyJwtToken = (token) => {
   try {
-    const data = jwt.verify(token, process.env.JWT_PRIVATE_KEY);
+    const data = jwt.verify(token, process.env.JWT_SECRET_KEY);
     if (data) {
       return { isTokenValid: true, data };
     }

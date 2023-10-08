@@ -1,5 +1,7 @@
-// const express = require('express')
+import dotenv from "dotenv";
+dotenv.config();
 import express from "express";
+import cookieParser from "cookie-parser";
 import { connectDb } from "./config/dbconfig.js";
 import cors from "cors";
 import foodRoute from "./routes/foods.route.js";
@@ -10,6 +12,7 @@ const port = process.env.PORT || 8800;
 
 app.use(cors());
 
+app.use(cookieParser());
 app.use(express.json());
 
 // handling error
