@@ -48,7 +48,22 @@ export const updateMenu = async (req, res) => {
       .json({ isSuccess: true, message: "Menu is successfully updated" });
   } catch (err) {
     res.status(400).json({
-      message: cleanErrorMessage,
+      message: err,
+    });
+  }
+};
+
+export const deleteMenu = async (req, res) => {
+  const menuId = req.params.menuId;
+
+  try {
+    await Menu.findByIdAndDelete(menuId);
+    res
+      .status(200)
+      .json({ isSuccess: true, message: "Menu is successfully deleted" });
+  } catch (err) {
+    res.status(400).json({
+      message: err,
     });
   }
 };
