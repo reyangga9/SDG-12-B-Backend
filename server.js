@@ -6,6 +6,7 @@ import { connectDb } from "./config/dbconfig.js";
 import cors from "cors";
 import foodRoute from "./routes/foods.route.js";
 import userRoute from "./routes/user.route.js";
+import menuRoute from "./routes/menu.route.js";
 
 const app = express();
 const port = process.env.PORT || 8800;
@@ -28,6 +29,7 @@ app.use((err, req, res, next) => {
 
 app.use("/api/food", foodRoute);
 app.use("/api/users", userRoute);
+app.use("/api/menus", menuRoute);
 
 app.listen(port, () => {
   connectDb();
