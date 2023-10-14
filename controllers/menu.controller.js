@@ -11,6 +11,7 @@ export const getMenuList = async (req, res) => {
 
 export const createMenu = async (req, res) => {
   const { title, image, url, type } = req.body;
+
   const newMenu = new Menu({
     title,
     image,
@@ -43,12 +44,14 @@ export const updateMenu = async (req, res) => {
       },
       { runValidators: true }
     );
-    res
-      .status(200)
-      .json({ isSuccess: true, message: "Menu is successfully updated" });
+    res.status(200).json({
+      isSuccess: true,
+      menu: menu,
+      message: "Menu is successfully updated",
+    });
   } catch (err) {
     res.status(400).json({
-      message: err,
+      message: err.message,
     });
   }
 };
@@ -63,7 +66,7 @@ export const deleteMenu = async (req, res) => {
       .json({ isSuccess: true, message: "Menu is successfully deleted" });
   } catch (err) {
     res.status(400).json({
-      message: err,
+      message: err.message,
     });
   }
 };
