@@ -95,9 +95,14 @@ export const loginUser = async (req, res) => {
 };
 
 export const logoutUser = async (req, res) => {
-  console.log(req.user);
-  return res
-    .clearCookie("auth_token")
-    .status(200)
-    .json({ isSuccess: true, message: "Successfully logged out" });
+  try {
+    return res
+      .clearCookie("auth_token")
+      .status(200)
+      .json({ isSuccess: true, message: "Successfully logged out" });
+  } catch (err) {
+    return res
+      .status(200)
+      .json({ isSuccess: true, message: "Successfully logged out" });
+  }
 };
