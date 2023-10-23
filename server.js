@@ -4,8 +4,9 @@ import express from "express";
 import cookieParser from "cookie-parser";
 import { connectDb } from "./config/dbconfig.js";
 import cors from "cors";
-import foodRoute from "./routes/foods.route.js";
+import foodRoute from "./routes/food.route.js";
 import userRoute from "./routes/user.route.js";
+import restaurantRoute from "./routes/restaurant.route.js";
 import menuRoute from "./routes/menu.route.js";
 
 const app = express();
@@ -30,6 +31,7 @@ app.use((err, req, res, next) => {
 app.use("/api/food", foodRoute);
 app.use("/api/users", userRoute);
 app.use("/api/menus", menuRoute);
+app.use("/api/restaurant", restaurantRoute);
 
 app.listen(port, () => {
   connectDb();
