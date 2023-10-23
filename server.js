@@ -7,6 +7,7 @@ import cors from "cors";
 import foodRoute from "./routes/food.route.js";
 import userRoute from "./routes/user.route.js";
 import restaurantRoute from "./routes/restaurant.route.js";
+import menuRoute from "./routes/menu.route.js";
 
 const app = express();
 const port = process.env.PORT || 8800;
@@ -29,6 +30,7 @@ app.use((err, req, res, next) => {
 
 app.use("/api/food", foodRoute);
 app.use("/api/users", userRoute);
+app.use("/api/menus", menuRoute);
 app.use("/api/restaurant", restaurantRoute);
 
 app.listen(port, () => {
