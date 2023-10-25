@@ -70,3 +70,17 @@ export const getCheapestFood = async (req, res) => {
       .json({ is_success: false, message: "Internal server error" });
   }
 };
+
+export const getAllFoodByRestaurant = async (req, res) => {
+  try {
+    const restaurantId = req.params.restaurantId;
+    console.log("Restaurant ID:", restaurantId);
+    const getAllFoodByRestaurant = await Food.find({ restoId: restaurantId });
+    console.log(getAllFoodByRestaurant);
+    res.status(201).json({ is_success: true, data: getAllFoodByRestaurant });
+  } catch (error) {
+    res
+      .status(500)
+      .json({ is_success: false, message: "Internal server error" });
+  }
+};
