@@ -71,6 +71,7 @@ export const mostLoved = async (req, res) => {
           alamat: 1,
           gambarRestaurant: 1,
           avgRating: { $avg: "$rating.rating" },
+          category: 1,
         },
       },
       { $sort: { avgRating: -1 } },
