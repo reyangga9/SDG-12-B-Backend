@@ -61,12 +61,26 @@ export const highestSells = async (req, res) => {
   }
 };
 
-export const mostSelledRestaurant = async (req, res) => {
+export const mostLoved = async (req, res) => {
   try {
-    const restaurant = await Restaurant.find();
+    const highestRatedRestaurant = await Restaurant.aggregate([
+      {
+        $project: {
+          nama: 1,
+          rating: 1,
+          avgRating: { $avg: "$rating.rating" },
+        },
+      },
+      { $sort: { avgRating: -1 } },
+    ]);
+
+    if (highestRatedRestaurant.length >= 0) {
+      res.json(highestRatedRestaurant);
+    } else {
+      res.status(404).json({ message: "No restaurants found" });
+    }
   } catch (error) {
-    res
-      .status(500)
-      .json({ is_success: false, message: "Internal server error" });
+    console.error(error);
+    res.status(500).json({ message: "Internal Server Error" });
   }
 };
