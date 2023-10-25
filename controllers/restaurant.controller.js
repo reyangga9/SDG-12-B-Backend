@@ -68,6 +68,8 @@ export const mostLoved = async (req, res) => {
         $project: {
           nama: 1,
           rating: 1,
+          alamat: 1,
+          gambarRestaurant: 1,
           avgRating: { $avg: "$rating.rating" },
         },
       },
@@ -75,12 +77,24 @@ export const mostLoved = async (req, res) => {
     ]);
 
     if (highestRatedRestaurant.length >= 0) {
-      res.json(highestRatedRestaurant);
+      res.status(201).json(highestRatedRestaurant);
     } else {
       res.status(404).json({ message: "No restaurants found" });
     }
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: "Internal Server Error" });
+  }
+};
+
+export const searchCategory = async (req, res) => {
+  try {
+    const category = req.params.category;
+    const restaurants = await Restaurant.find({ category });
+    console.log(restaurants);
+    res.status(201).json(restaurants);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Internal Server Error" });
   }
 };
