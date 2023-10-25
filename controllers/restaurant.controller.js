@@ -13,7 +13,6 @@ export const createRestaurant = async (req, res) => {
     const savedRestaurant = await newRestaurant.save();
     res.status(201).json({ is_success: true, data: savedRestaurant });
   } catch (error) {
-    console.error(error);
     res
       .status(500)
       .json({ is_success: false, message: "Internal server error" });
@@ -22,23 +21,30 @@ export const createRestaurant = async (req, res) => {
 
 export const getRestaurantAll = async (req, res) => {
   try {
-    let restaurant = await Restaurant.find();
-
-    const ratings = restaurant.map((x) => x.rating);
-    console.log(ratings);
-
-    // const averageRating = ratings.length
-    //   ? ratings.reduce((sum, rating) => sum + rating.rating, 0) / ratings.length
-    //   : 0;
-    // console.log(averageRating);
-    // restaurant = { ...restaurant, averageRating };
+    const restaurant = await Restaurant.aggregate([
+      {
+        $project: {
+          category: 1,
+          _id: 1,
+          nama: 1,
+          alamat: 1,
+          kota: 1,
+          gambarRestaurant: 1,
+          rating: 1,
+          jumlahTerjual: 1,
+          createdAt: 1,
+          updatedAt: 1,
+          __v: 1,
+          avgRating: { $avg: "$rating.rating" },
+        },
+      },
+    ]);
 
     res.status(201).json({
       is_success: true,
       data: restaurant,
     });
   } catch (error) {
-    console.error(error);
     res
       .status(500)
       .json({ is_success: false, message: "Internal server error" });
@@ -54,7 +60,6 @@ export const highestSells = async (req, res) => {
       data: restaurant,
     });
   } catch (error) {
-    console.error(error);
     res
       .status(500)
       .json({ is_success: false, message: "Internal server error" });
@@ -83,7 +88,6 @@ export const mostLoved = async (req, res) => {
       res.status(404).json({ message: "No restaurants found" });
     }
   } catch (error) {
-    console.error(error);
     res.status(500).json({ message: "Internal Server Error" });
   }
 };
@@ -95,7 +99,6 @@ export const searchCategory = async (req, res) => {
     console.log(restaurants);
     res.status(201).json(restaurants);
   } catch (error) {
-    console.error(error);
     res.status(500).json({ error: "Internal Server Error" });
   }
 };
