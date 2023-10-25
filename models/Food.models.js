@@ -26,6 +26,10 @@ const FoodSchema = new mongoose.Schema(
       type: Number,
       required: true,
     },
+
+    discountPercentage: {
+      type: Number,
+    },
   },
   { timestamps: true }
 );
