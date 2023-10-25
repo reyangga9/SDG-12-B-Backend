@@ -26,7 +26,6 @@ export const createFood = async (req, res) => {
 
     res.status(201).json({ is_success: true, data: savedFood });
   } catch (error) {
-    console.error(error);
     res
       .status(500)
       .json({ is_success: false, message: "Internal server error" });
@@ -45,7 +44,6 @@ export const getFood = async (req, res) => {
 
     res.status(200).json({ is_success: true, data: food });
   } catch (error) {
-    console.error(error);
     res
       .status(500)
       .json({ is_success: false, message: "Internal server error" });
@@ -64,7 +62,20 @@ export const getCheapestFood = async (req, res) => {
 
     res.status(200).json({ is_success: true, data: cheapestFoods });
   } catch (error) {
-    console.error(error);
+    res
+      .status(500)
+      .json({ is_success: false, message: "Internal server error" });
+  }
+};
+
+export const getAllFoodByRestaurant = async (req, res) => {
+  try {
+    const restaurantId = req.params.restaurantId;
+
+    const getAllFoodByRestaurant = await Food.find({ restoId: restaurantId });
+
+    res.status(201).json({ is_success: true, data: getAllFoodByRestaurant });
+  } catch (error) {
     res
       .status(500)
       .json({ is_success: false, message: "Internal server error" });
