@@ -2,13 +2,13 @@ import express from "express";
 import {
   createRestaurant,
   getRestaurantAll,
-  mostLovedRestaurant,
+  highestSells,
 } from "../controllers/restaurant.controller.js";
 
 const router = express.Router();
 
 router.get("/", getRestaurantAll);
 router.post("/createRestaurant", createRestaurant);
-router.get("/loved", mostLovedRestaurant);
+router.get("/mostSells", highestSells);
 
 export default router;

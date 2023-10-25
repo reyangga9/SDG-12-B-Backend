@@ -2,11 +2,13 @@ import Restaurant from "../models/Restaurant.models.js";
 
 export const createRestaurant = async (req, res) => {
   try {
-    const { nama, alamat, rating } = req.body;
+    const { nama, alamat, rating, gambarRestaurant, kota } = req.body;
     const newRestaurant = new Restaurant({
       nama,
       alamat,
       rating,
+      gambarRestaurant,
+      kota,
     });
     const savedRestaurant = await newRestaurant.save();
     res.status(201).json({ is_success: true, data: savedRestaurant });
@@ -43,11 +45,9 @@ export const getRestaurantAll = async (req, res) => {
   }
 };
 
-export const mostLovedRestaurant = async (req, res) => {
+export const highestSells = async (req, res) => {
   try {
-    const restaurant = await Restaurant.find()
-      .sort({ jumlahTerjual: 1 })
-      .limit(10);
+    const restaurant = await Restaurant.find().sort({ jumlahTerjual: -1 });
 
     res.status(201).json({
       is_success: true,
@@ -55,6 +55,16 @@ export const mostLovedRestaurant = async (req, res) => {
     });
   } catch (error) {
     console.error(error);
+    res
+      .status(500)
+      .json({ is_success: false, message: "Internal server error" });
+  }
+};
+
+export const mostSelledRestaurant = async (req, res) => {
+  try {
+    const restaurant = await Restaurant.find();
+  } catch (error) {
     res
       .status(500)
       .json({ is_success: false, message: "Internal server error" });

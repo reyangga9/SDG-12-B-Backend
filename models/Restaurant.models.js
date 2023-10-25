@@ -11,6 +11,14 @@ const RestaurantSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
+    kota: {
+      type: String,
+      required: true,
+    },
+    gambarRestaurant: {
+      type: String,
+      required: true,
+    },
     rating: [
       {
         userId: {
