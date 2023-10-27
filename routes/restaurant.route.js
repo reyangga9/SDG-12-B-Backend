@@ -12,12 +12,14 @@ import {
 const router = express.Router();
 
 router.get("/", getRestaurantAll);
-router.get("/:id", getRestaurantById);
+router.get("/mostSells", highestSells);
+router.get("/mostLoved", mostLoved);
+
 router.get("/restoandfood/:id", getRestaurantByIdAndFood);
 
 router.post("/createRestaurant", createRestaurant);
-router.get("/mostSells", highestSells);
-router.get("/mostLoved", mostLoved);
+
 router.get("/search/:category", searchCategory);
+router.get("/:id", getRestaurantById);
 
 export default router;
