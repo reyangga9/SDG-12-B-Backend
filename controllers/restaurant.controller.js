@@ -1,4 +1,6 @@
+import Food from "../models/Food.models.js";
 import Restaurant from "../models/Restaurant.models.js";
+import { calculateAverageRating } from "../utils/averageRating.js";
 
 export const createRestaurant = async (req, res) => {
   try {
@@ -96,9 +98,46 @@ export const searchCategory = async (req, res) => {
   try {
     const category = req.params.category;
     const restaurants = await Restaurant.find({ category });
-    console.log(restaurants);
+
     res.status(201).json(restaurants);
   } catch (error) {
-    res.status(500).json({ error: "Internal Server Error" });
+    res.status(500).json({ message: error + "/ Interval Server Error" });
+  }
+};
+
+export const getRestaurantById = async (req, res) => {
+  try {
+    const paramsRestaurant = req.params.id;
+    let restaurants = await Restaurant.findById({ _id: paramsRestaurant });
+
+    const avgRating = calculateAverageRating(restaurants);
+    restaurants = { ...restaurants._doc, avgRating };
+
+    res.status(201).json(restaurants);
+  } catch (error) {
+    res.status(500).json({ message: error + "/ Interval Server Error" });
+  }
+};
+
+export const getRestaurantByIdAndFood = async (req, res) => {
+  try {
+    const paramsRestaurant = req.params.id;
+    let restaurants = await Restaurant.findById({ _id: paramsRestaurant });
+
+    const getAllFoodByRestaurant = await Food.find({
+      restoId: paramsRestaurant,
+    });
+
+    const avgRating = calculateAverageRating(restaurants);
+    restaurants = { ...restaurants._doc, avgRating };
+
+    // res.status(201).json({ is_success: true, data: getAllFoodByRestaurant });
+    res.status(201).json({
+      is_success: true,
+      restaurant: restaurants,
+      food: getAllFoodByRestaurant,
+    });
+  } catch (error) {
+    res.status(500).json({ message: error + "/ Interval Server Error" });
   }
 };
