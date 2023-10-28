@@ -65,12 +65,26 @@ export const getRestaurantAll = async (req, res) => {
 
 export const highestSells = async (req, res) => {
   try {
-    const restaurant = await Restaurant.find().sort({ jumlahTerjual: -1 });
+    const highestSellsRestaurant = await Restaurant.aggregate([
+      {
+        $project: {
+          nama: 1,
+          rating: 1,
+          alamat: 1,
+          gambarRestaurant: 1,
+          avgRating: { $round: [{ $avg: "$rating.rating" }, 1] },
+          category: 1,
+          jumlahTerjual: 1,
+        },
+      },
+      { $sort: { jumlahTerjual: -1 } },
+    ]);
 
-    res.status(201).json({
-      is_success: true,
-      data: restaurant,
-    });
+    if (highestSellsRestaurant.length >= 0) {
+      res.status(201).json(highestSellsRestaurant);
+    } else {
+      res.status(404).json({ message: "No restaurants found" });
+    }
   } catch (error) {
     res
       .status(500)
@@ -89,6 +103,7 @@ export const mostLoved = async (req, res) => {
           gambarRestaurant: 1,
           avgRating: { $round: [{ $avg: "$rating.rating" }, 1] },
           category: 1,
+          jumlahTerjual,
         },
       },
       { $sort: { avgRating: -1 } },
