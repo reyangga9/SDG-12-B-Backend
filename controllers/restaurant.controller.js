@@ -1,6 +1,8 @@
 import Food from "../models/Food.models.js";
 import Restaurant from "../models/Restaurant.models.js";
 import { calculateAverageRating } from "../utils/averageRating.js";
+import User from "../models/User.models.js";
+import { fetchUserName, fetchUserNames } from "../utils/fetchNameInRating.js";
 
 export const createRestaurant = async (req, res) => {
   try {
@@ -164,7 +166,8 @@ export const getRestaurantByIdAndFood = async (req, res) => {
     const avgRating = calculateAverageRating(restaurants);
     restaurants = { ...restaurants._doc, avgRating };
 
-    // res.status(201).json({ is_success: true, data: getAllFoodByRestaurant });
+    restaurants = await fetchUserName(restaurants, User);
+
     res.status(201).json({
       is_success: true,
       restaurant: restaurants,
