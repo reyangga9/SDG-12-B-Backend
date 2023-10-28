@@ -6,5 +6,5 @@ export const calculateAverageRating = (restaurantData) => {
 
   const totalRating = ratings.reduce((sum, rating) => sum + rating.rating, 0);
   const averageRating = totalRating / ratings.length;
-  return averageRating;
+  return parseFloat(averageRating.toFixed(1));
 };

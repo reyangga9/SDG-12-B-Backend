@@ -4,13 +4,23 @@ import { calculateAverageRating } from "../utils/averageRating.js";
 
 export const createRestaurant = async (req, res) => {
   try {
-    const { nama, alamat, rating, gambarRestaurant, kota } = req.body;
+    const {
+      nama,
+      alamat,
+      rating,
+      gambarRestaurant,
+      kota,
+      category,
+      jumlahTerjual,
+    } = req.body;
     const newRestaurant = new Restaurant({
       nama,
       alamat,
       rating,
       gambarRestaurant,
       kota,
+      category,
+      jumlahTerjual,
     });
     const savedRestaurant = await newRestaurant.save();
     res.status(201).json({ is_success: true, data: savedRestaurant });
@@ -37,7 +47,7 @@ export const getRestaurantAll = async (req, res) => {
           createdAt: 1,
           updatedAt: 1,
           __v: 1,
-          avgRating: { $avg: "$rating.rating" },
+          avgRating: { $round: [{ $avg: "$rating.rating" }, 1] },
         },
       },
     ]);
@@ -77,7 +87,7 @@ export const mostLoved = async (req, res) => {
           rating: 1,
           alamat: 1,
           gambarRestaurant: 1,
-          avgRating: { $avg: "$rating.rating" },
+          avgRating: { $round: [{ $avg: "$rating.rating" }, 1] },
           category: 1,
         },
       },

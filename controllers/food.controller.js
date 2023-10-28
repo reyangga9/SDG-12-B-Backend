@@ -10,6 +10,7 @@ export const createFood = async (req, res) => {
       restoId,
       stokMakanan,
       discountPercentage,
+      category,
     } = req.body;
 
     const newFood = new Food({
@@ -20,6 +21,7 @@ export const createFood = async (req, res) => {
       restoId,
       stokMakanan,
       discountPercentage,
+      category,
     });
 
     const savedFood = await newFood.save();
