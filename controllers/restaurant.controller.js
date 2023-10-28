@@ -103,7 +103,7 @@ export const mostLoved = async (req, res) => {
           gambarRestaurant: 1,
           avgRating: { $round: [{ $avg: "$rating.rating" }, 1] },
           category: 1,
-          jumlahTerjual,
+          jumlahTerjual: 1,
         },
       },
       { $sort: { avgRating: -1 } },
