@@ -81,7 +81,7 @@ export const highestSells = async (req, res) => {
     ]);
 
     if (highestSellsRestaurant.length >= 0) {
-      res.status(201).json(highestSellsRestaurant);
+      res.status(201).json({ is_success: true, data: highestSellsRestaurant });
     } else {
       res.status(404).json({ message: "No restaurants found" });
     }
@@ -110,12 +110,16 @@ export const mostLoved = async (req, res) => {
     ]);
 
     if (highestRatedRestaurant.length >= 0) {
-      res.status(201).json(highestRatedRestaurant);
+      res.status(201).json({ is_success: true, data: highestRatedRestaurant });
     } else {
-      res.status(404).json({ message: "No restaurants found" });
+      res
+        .status(404)
+        .json({ is_success: false, message: "No restaurants found" });
     }
   } catch (error) {
-    res.status(500).json({ message: "Internal Server Error" });
+    res
+      .status(500)
+      .json({ is_success: false, message: "Internal Server Error" });
   }
 };
 
@@ -126,7 +130,9 @@ export const searchCategory = async (req, res) => {
 
     res.status(201).json(restaurants);
   } catch (error) {
-    res.status(500).json({ message: error + "/ Interval Server Error" });
+    res
+      .status(500)
+      .json({ is_success: false, message: error + "/ Interval Server Error" });
   }
 };
 
@@ -138,9 +144,11 @@ export const getRestaurantById = async (req, res) => {
     const avgRating = calculateAverageRating(restaurants);
     restaurants = { ...restaurants._doc, avgRating };
 
-    res.status(201).json(restaurants);
+    res.status(201).json({ is_success: true, restaurant: restaurants });
   } catch (error) {
-    res.status(500).json({ message: error + "/ Interval Server Error" });
+    res
+      .status(500)
+      .json({ is_success: false, message: error + "/ Interval Server Error" });
   }
 };
 
