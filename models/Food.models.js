@@ -26,6 +26,9 @@ const FoodSchema = new mongoose.Schema(
       type: Number,
       required: true,
     },
+    category: {
+      type: [String],
+    },
 
     discountPercentage: {
       type: Number,

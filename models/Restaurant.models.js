@@ -31,6 +31,9 @@ const RestaurantSchema = new mongoose.Schema(
           max: 5,
           required: true,
         },
+        comment: {
+          type: String,
+        },
       },
     ],
     jumlahTerjual: {
