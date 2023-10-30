@@ -177,3 +177,23 @@ export const getRestaurantByIdAndFood = async (req, res) => {
     res.status(500).json({ message: error + "/ Interval Server Error" });
   }
 };
+
+export const getRestaurantRandom = async (req, res) => {
+  try {
+    const count = await Restaurant.countDocuments();
+    if (count === 0) {
+      return res.status(404).json({ message: "No restaurants found." });
+    }
+    const randomIndex = Math.floor(Math.random() * count);
+    const randomRestaurants = await Restaurant.find()
+      .skip(randomIndex)
+      .limit(20); // Limit to 20 restaurants
+
+    res.status(201).json({
+      is_success: true,
+      restaurant: randomRestaurants,
+    });
+  } catch (error) {
+    res.status(500).json({ message: error + "/ Interval Server Error" });
+  }
+};
