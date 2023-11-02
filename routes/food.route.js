@@ -6,16 +6,11 @@ import {
   getFood,
 } from "../controllers/food.controller.js";
 
-// import { getFood } from "../controllers/food.controller.js";
-
 const router = express.Router();
 
 router.get("/", getFood);
 router.get("/cheapestFood", getCheapestFood);
 router.get("/restaurantFood/:restaurantId", getAllFoodByRestaurant);
 router.post("/createFood", createFood);
-
-// kalo dah ada schema pake yg bwh
-// router.get("/", getFood);
 
 export default router;

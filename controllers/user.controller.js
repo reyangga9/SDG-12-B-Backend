@@ -2,6 +2,7 @@ import validator from "validator";
 import User from "../models/User.models.js";
 import { hashPassword, generateJwtToken } from "../utils/auth.utils.js";
 import bcrypt from "bcryptjs";
+import { message_error } from "./constant.js";
 
 export const createUser = async (req, res) => {
   const { username, email, password } = req.body;
@@ -78,31 +79,53 @@ export const loginUser = async (req, res) => {
       username: user.username,
       email: user.email,
     });
-
-    res
-      .cookie("auth_token", token, {
-        httpOnly: true,
-        secure: true,
-      })
-      .status(200)
-      .json({
-        isSuccess: true,
-        user: { _id: user._id, username: user.username, email: user.email },
-      });
+    console.log("bisa");
+    res.status(200).json({
+      isSuccess: true,
+      user: { _id: user._id, username: user.username, email: user.email },
+      token,
+    });
   } catch (err) {
-    res.status(404).json({ isSuccess: false, message: "User doesn't exist" });
+    res.status(404).json({ isSuccess: false, message: err.message });
   }
 };
 
 export const logoutUser = async (req, res) => {
   try {
     return res
-      .clearCookie("auth_token")
       .status(200)
       .json({ isSuccess: true, message: "Successfully logged out" });
   } catch (err) {
     return res
-      .status(200)
-      .json({ isSuccess: true, message: "Successfully logged out" });
+      .status(500)
+      .json({ isSuccess: false, message: err + message_error });
+  }
+};
+
+export const refreshToken = async (req, res) => {
+  try {
+    const { refreshToken } = req.body;
+
+    // Verify the provided refresh token
+    jwt.verify(refreshToken, secretKey, (err, decoded) => {
+      if (err) {
+        return res.status(401).json({ error: "Invalid refresh token" });
+      }
+
+      const token = generateJwtToken({
+        _id: String(user._id),
+        username: user.username,
+        email: user.email,
+      });
+      // const newAccessToken = jwt.sign({ userId: decoded.userId }, secretKey, {
+      //   expiresIn: "15m",
+      // });
+
+      res.json({ accessToken: newAccessToken });
+    });
+  } catch (error) {
+    return res
+      .status(500)
+      .json({ isSuccess: false, message: err + message_error });
   }
 };
