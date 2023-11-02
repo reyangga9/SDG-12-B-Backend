@@ -3,6 +3,7 @@ import Restaurant from "../models/Restaurant.models.js";
 import { calculateAverageRating } from "../utils/averageRating.js";
 import User from "../models/User.models.js";
 import { fetchUserName, fetchUserNames } from "../utils/fetchNameInRating.js";
+import { message_error } from "./constant.js";
 
 export const createRestaurant = async (req, res) => {
   try {
@@ -27,9 +28,7 @@ export const createRestaurant = async (req, res) => {
     const savedRestaurant = await newRestaurant.save();
     res.status(201).json({ is_success: true, data: savedRestaurant });
   } catch (error) {
-    res
-      .status(500)
-      .json({ is_success: false, message: "Internal server error" });
+    res.status(500).json({ is_success: false, message: error + message_error });
   }
 };
 
@@ -59,9 +58,7 @@ export const getRestaurantAll = async (req, res) => {
       data: restaurant,
     });
   } catch (error) {
-    res
-      .status(500)
-      .json({ is_success: false, message: "Internal server error" });
+    res.status(500).json({ is_success: false, message: error + message_error });
   }
 };
 
@@ -88,9 +85,7 @@ export const highestSells = async (req, res) => {
       res.status(404).json({ message: "No restaurants found" });
     }
   } catch (error) {
-    res
-      .status(500)
-      .json({ is_success: false, message: "Internal server error" });
+    res.status(500).json({ is_success: false, message: error + message_error });
   }
 };
 
@@ -119,9 +114,7 @@ export const mostLoved = async (req, res) => {
         .json({ is_success: false, message: "No restaurants found" });
     }
   } catch (error) {
-    res
-      .status(500)
-      .json({ is_success: false, message: "Internal Server Error" });
+    res.status(500).json({ is_success: false, message: error + message_error });
   }
 };
 
@@ -132,9 +125,7 @@ export const searchCategory = async (req, res) => {
 
     res.status(201).json(restaurants);
   } catch (error) {
-    res
-      .status(500)
-      .json({ is_success: false, message: error + "/ Interval Server Error" });
+    res.status(500).json({ is_success: false, message: error + message_error });
   }
 };
 
@@ -148,9 +139,7 @@ export const getRestaurantById = async (req, res) => {
 
     res.status(201).json({ is_success: true, restaurant: restaurants });
   } catch (error) {
-    res
-      .status(500)
-      .json({ is_success: false, message: error + "/ Interval Server Error" });
+    res.status(500).json({ is_success: false, message: error + message_error });
   }
 };
 
@@ -174,7 +163,7 @@ export const getRestaurantByIdAndFood = async (req, res) => {
       food: getAllFoodByRestaurant,
     });
   } catch (error) {
-    res.status(500).json({ message: error + "/ Interval Server Error" });
+    res.status(500).json({ message: error + message_error });
   }
 };
 
@@ -189,6 +178,6 @@ export const getRestaurantRandom = async (req, res) => {
       restaurant: randomRestaurants,
     });
   } catch (error) {
-    res.status(500).json({ message: error + "/ Interval Server Error" });
+    res.status(500).json({ message: error + message_error });
   }
 };
