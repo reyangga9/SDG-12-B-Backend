@@ -17,6 +17,6 @@ router.post("/login", loginUser);
 // Logout user
 router.post("/logout", logoutUser);
 // Refresh token
-router.post("/refreshToken", refreshToken);
+router.get("/refreshToken", refreshToken);
 
 export default router;
