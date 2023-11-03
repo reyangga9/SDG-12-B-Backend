@@ -3,6 +3,7 @@ import User from "../models/User.models.js";
 import { hashPassword, generateJwtToken } from "../utils/auth.utils.js";
 import bcrypt from "bcryptjs";
 import { message_error } from "./constant.js";
+import jwt from "jsonwebtoken";
 
 export const createUser = async (req, res) => {
   const { username, email, password } = req.body;
@@ -79,7 +80,7 @@ export const loginUser = async (req, res) => {
       username: user.username,
       email: user.email,
     });
-    console.log("bisa");
+
     res.status(200).json({
       isSuccess: true,
       user: { _id: user._id, username: user.username, email: user.email },
@@ -102,30 +103,27 @@ export const logoutUser = async (req, res) => {
   }
 };
 
-export const refreshToken = async (req, res) => {
+export const refreshToken = (req, res) => {
   try {
     const { refreshToken } = req.body;
 
-    // Verify the provided refresh token
-    jwt.verify(refreshToken, secretKey, (err, decoded) => {
+    jwt.verify(refreshToken, process.env.JWT_SECRET_KEY, (err, decoded) => {
       if (err) {
         return res.status(401).json({ error: "Invalid refresh token" });
       }
 
-      const token = generateJwtToken({
-        _id: String(user._id),
-        username: user.username,
-        email: user.email,
-      });
-      // const newAccessToken = jwt.sign({ userId: decoded.userId }, secretKey, {
-      //   expiresIn: "15m",
-      // });
+      // Here, you can access user information from the decoded token
+      const { _id, username, email } = decoded;
 
-      res.json({ accessToken: newAccessToken });
+      // Generate a new access token using your token utility function
+      const newAccessToken = generateJwtToken({ _id, username, email });
+
+      res.json({ accessToken: newAccessToken, data: decoded });
     });
   } catch (error) {
-    return res
-      .status(500)
-      .json({ isSuccess: false, message: err + message_error });
+    return res.status(500).json({
+      isSuccess: false,
+      message: error.message, // Handle errors properly
+    });
   }
 };
