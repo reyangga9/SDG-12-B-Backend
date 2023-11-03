@@ -105,17 +105,22 @@ export const logoutUser = async (req, res) => {
 
 export const refreshToken = (req, res) => {
   try {
-    const { refreshToken } = req.body;
+    // Get the refresh token from the Authorization header
+    const refreshToken = req.header("Authorization");
+
+    if (!refreshToken) {
+      return res.status(401).json({ error: "Missing refresh token" });
+    }
 
     jwt.verify(refreshToken, process.env.JWT_SECRET_KEY, (err, decoded) => {
       if (err) {
         return res.status(401).json({ error: "Invalid refresh token" });
       }
 
-      // Here, you can access user information from the decoded token
+      // Access user ID
       const { _id, username, email } = decoded;
 
-      // Generate a new access token using your token utility function
+      // Generate a new access token
       const newAccessToken = generateJwtToken({ _id, username, email });
 
       res.json({ accessToken: newAccessToken, data: decoded });
