@@ -4,6 +4,7 @@ import { hashPassword, generateJwtToken } from "../utils/auth.utils.js";
 import bcrypt from "bcryptjs";
 import { message_error } from "./constant.js";
 import jwt from "jsonwebtoken";
+import cookie from "cookie";
 
 export const createUser = async (req, res) => {
   const { username, email, password } = req.body;
@@ -81,11 +82,17 @@ export const loginUser = async (req, res) => {
       email: user.email,
     });
 
-    res.status(200).json({
-      isSuccess: true,
-      user: { _id: user._id, username: user.username, email: user.email },
-      token,
-    });
+    res
+      .cookie("auth_token", token, {
+        httpOnly: true,
+        secure: true,
+      })
+      .status(200)
+      .json({
+        isSuccess: true,
+        user: { _id: user._id, username: user.username, email: user.email },
+        token,
+      });
   } catch (err) {
     res.status(404).json({ isSuccess: false, message: err.message });
   }
@@ -94,6 +101,7 @@ export const loginUser = async (req, res) => {
 export const logoutUser = async (req, res) => {
   try {
     return res
+      .clearCookie("auth_token")
       .status(200)
       .json({ isSuccess: true, message: "Successfully logged out" });
   } catch (err) {
