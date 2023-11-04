@@ -1,15 +1,19 @@
 import { verifyJwtToken } from "../utils/auth.utils.js";
 
 export const validateAuth = (req, res, next) => {
-  const token = req.cookies.auth_token;
-  if (!token) {
+  const token = req.headers.authorization;
+
+  if (!token || !token.startsWith("Bearer ")) {
     return res.status(401).json({
       isSuccess: false,
-      message: "Token doesn't exist, you are not authorized!",
+      message: "Bearer token is missing, you are not authorized!",
     });
   }
+
+  const authToken = token.replace("Bearer ", "");
+
   try {
-    const { data } = verifyJwtToken(token);
+    const { data } = verifyJwtToken(authToken);
     req.user = data;
     return next();
   } catch {
