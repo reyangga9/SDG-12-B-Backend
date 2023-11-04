@@ -10,16 +10,12 @@ export const generateJwtToken = (payload) => {
 
 export const verifyJwtToken = (token) => {
   try {
-    const data = jwt.verify(token, process.env.JWT_SECRET_KEY);
-    if (data) {
-      return { isTokenValid: true, data };
-    }
+    const decodedToken = jwt.verify(token, process.env.JWT_SECRET_KEY);
+    return { isTokenValid: true, data: decodedToken };
   } catch (err) {
-    return { isTokenValid: false, data: err };
+    return { isTokenValid: false, data: err.message };
   }
-  return { isTokenValid: false, data: null };
 };
-
 export const hashPassword = (plainPassword) => {
   let salt = bcrypt.genSaltSync(10);
   let hash = bcrypt.hashSync(plainPassword, salt);

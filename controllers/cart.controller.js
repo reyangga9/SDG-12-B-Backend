@@ -62,7 +62,6 @@ export const updateProductInCart = async (req, res) => {
 
     // Find the cart item by its ID
     const existingCartItem = await Cart.findById(id);
-    console.log(existingCartItem);
 
     if (!existingCartItem) {
       return res
@@ -119,7 +118,8 @@ export const removeProductFromCart = async (req, res) => {
 // Get items in the cart for a user
 export const getItemsInCartForUser = async (req, res) => {
   try {
-    const { userId } = req.params;
+    // console.log(req.user);
+    const userId = req.user._id;
 
     const itemsInCart = await Cart.find({
       userId,

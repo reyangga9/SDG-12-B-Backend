@@ -19,6 +19,6 @@ router.put("/update/:id", validateAuth, updateProductInCart);
 router.delete("/remove/:id", validateAuth, removeProductFromCart);
 
 // Get items in the cart for a user
-router.get("/user/:userId", getItemsInCartForUser);
+router.get("/user/allCart", validateAuth, getItemsInCartForUser);
 
 export default router;
