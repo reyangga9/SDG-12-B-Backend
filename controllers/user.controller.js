@@ -114,18 +114,22 @@ export const logoutUser = async (req, res) => {
 export const refreshToken = (req, res) => {
   try {
     // Get the refresh token from the Authorization header
-    const refreshToken = req.header("Authorization");
+    const authorizationHeader = req.headers.authorization;
 
-    if (!refreshToken) {
-      return res.status(401).json({ error: "Missing refresh token" });
+    if (!authorizationHeader || !authorizationHeader.startsWith("Bearer ")) {
+      return res
+        .status(401)
+        .json({ error: "Missing or invalid refresh token" });
     }
+
+    const refreshToken = authorizationHeader.replace("Bearer ", "");
 
     jwt.verify(refreshToken, process.env.JWT_SECRET_KEY, (err, decoded) => {
       if (err) {
         return res.status(401).json({ error: "Invalid refresh token" });
       }
 
-      // Access user ID
+      // Access user ID or other data from the decoded token
       const { _id, username, email } = decoded;
 
       // Generate a new access token
@@ -134,9 +138,6 @@ export const refreshToken = (req, res) => {
       res.json({ accessToken: newAccessToken, data: decoded });
     });
   } catch (error) {
-    return res.status(500).json({
-      isSuccess: false,
-      message: error.message, // Handle errors properly
-    });
+    res.status(500).json({ error: "Internal server error" });
   }
 };
