@@ -35,16 +35,9 @@ export const addProductToCart = async (req, res) => {
         quantity,
       });
 
-      if (quantity <= 0) {
-        res.status(400).json({
-          is_success: false,
-          data: "The number must not be less than 0",
-        });
-      } else {
-        const savedItem = await newItem.save();
+      const savedItem = await newItem.save();
 
-        res.status(201).json({ is_success: true, data: savedItem });
-      }
+      res.status(201).json({ is_success: true, data: savedItem });
     }
   } catch (error) {
     res.status(500).json({ is_success: false, message: error + message_error });
