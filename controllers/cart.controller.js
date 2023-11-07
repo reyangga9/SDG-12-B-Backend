@@ -51,7 +51,7 @@ export const updateProductInCart = async (req, res) => {
     const { quantity } = req.body;
 
     // Get the user ID from the authenticated user's token
-    const userIdFromToken = req.user._id; // Adjust this according to your authentication setup
+    const userId = req.user._id; // Adjust this according to your authentication setup
 
     // Find the cart item by its ID
     const existingCartItem = await Cart.findById(id);
@@ -62,7 +62,7 @@ export const updateProductInCart = async (req, res) => {
         .json({ is_success: false, message: "Item not found" });
     }
 
-    if (existingCartItem.userId.toString() !== userIdFromToken) {
+    if (existingCartItem.userId.toString() !== userId) {
       return res.status(403).json({
         is_success: false,
         message: "You are not authorized to update this item",
@@ -78,7 +78,7 @@ export const updateProductInCart = async (req, res) => {
   }
 };
 
-// Remove a product from the cart
+// remove all Cart
 export const removeProductFromCart = async (req, res) => {
   try {
     const { id } = req.params;
@@ -111,15 +111,66 @@ export const removeProductFromCart = async (req, res) => {
 // Get items in the cart for a user
 export const getItemsInCartForUser = async (req, res) => {
   try {
-    // console.log(req.user);
     const userId = req.user._id;
 
-    const itemsInCart = await Cart.find({
-      userId,
-      isOrdered: false,
-    }).populate("foodId");
+    const itemsInCart = await Cart.find({ userId }).populate({
+      path: "foodId",
+      select: "makanan _id harga restoId",
+      model: "Food", // Assuming the model name is 'Food'
+    });
 
-    res.status(200).json({ is_success: true, data: itemsInCart });
+    if (itemsInCart.length === 0) {
+      return res
+        .status(500)
+        .json({ is_success: false, message: "User doesnt have any cart" });
+    }
+    const food = itemsInCart.map((item) => ({
+      foodId: item.foodId._id, // Change this to match your desired structure
+      makanan: item.foodId.makanan, // Change this to match your desired structure
+      harga: item.foodId.harga, // Change this to match your desired structure
+      restoId: item.foodId.restoId, // Change this to match your desired structure
+      quantity: item.quantity,
+    }));
+
+    res.status(200).json({
+      is_success: true,
+      userId,
+      restoId: itemsInCart[0].foodId.restoId,
+      food,
+    });
+  } catch (error) {
+    res.status(500).json({ is_success: false, message: error + message_error });
+  }
+};
+
+export const removeAllItemsFromCart = async (req, res) => {
+  try {
+    const userId = req.user._id; // Adjust this according to your authentication setup
+
+    const itemsInCart = await Cart.find({ userId });
+
+    if (itemsInCart.length === 0) {
+      return res
+        .status(404)
+        .json({ is_success: false, message: "Cart is already empty" });
+    }
+
+    // Check if the user making the request is the owner of all items in the cart
+    for (const item of itemsInCart) {
+      if (item.userId.toString() !== userId) {
+        return res.status(403).json({
+          is_success: false,
+          message: "You are not authorized to remove items from the cart",
+        });
+      }
+    }
+
+    // Remove all items in the cart for the user
+    await Cart.deleteMany({ userId: userId });
+
+    res
+      .status(200)
+      .json({ is_success: true, message: "All items removed from the cart" });
   } catch (error) {
     res.status(500).json({ is_success: false, message: error + message_error });
   }
