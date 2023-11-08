@@ -126,7 +126,7 @@ export const getItemsInCartForUser = async (req, res) => {
         .json({ is_success: false, message: "User doesnt have any cart" });
     }
     const food = itemsInCart.map((item) => ({
-      foodId: item.foodId._id, // Change this to match your desired structure
+      _id: item.foodId._id, // Change this to match your desired structure
       makanan: item.foodId.makanan, // Change this to match your desired structure
       harga: item.foodId.harga, // Change this to match your desired structure
       restoId: item.foodId.restoId, // Change this to match your desired structure
