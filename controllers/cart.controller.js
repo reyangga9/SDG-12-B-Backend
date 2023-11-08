@@ -1,4 +1,5 @@
 import Cart from "../models/Cart.models.js";
+import Restaurant from "../models/Restaurant.models.js";
 
 import { message_error } from "./constant.js";
 
@@ -132,10 +133,15 @@ export const getItemsInCartForUser = async (req, res) => {
       quantity: item.quantity,
     }));
 
+    const resto = await Restaurant.find({
+      _id: itemsInCart[0].foodId.restoId,
+    }).select("nama alamat kota");
+    console.log(resto);
+
     res.status(200).json({
       is_success: true,
       userId,
-      restoId: itemsInCart[0].foodId.restoId,
+      resto: resto,
       food,
     });
   } catch (error) {
