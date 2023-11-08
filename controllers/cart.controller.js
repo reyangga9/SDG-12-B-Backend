@@ -125,13 +125,15 @@ export const getItemsInCartForUser = async (req, res) => {
         .status(500)
         .json({ is_success: false, message: "User doesnt have any cart" });
     }
-    const food = itemsInCart.map((item) => ({
-      _id: item.foodId._id, // Change this to match your desired structure
-      makanan: item.foodId.makanan, // Change this to match your desired structure
-      harga: item.foodId.harga, // Change this to match your desired structure
-      restoId: item.foodId.restoId, // Change this to match your desired structure
-      quantity: item.quantity,
-    }));
+    const food = itemsInCart
+      .filter((item) => item.foodId) // Filter out entries with null foodId
+      .map((item) => ({
+        _id: item.foodId._id,
+        makanan: item.foodId.makanan,
+        harga: item.foodId.harga,
+        restoId: item.foodId.restoId,
+        quantity: item.quantity,
+      }));
 
     const resto = await Restaurant.find({
       _id: itemsInCart[0].foodId.restoId,
