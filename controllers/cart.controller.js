@@ -25,11 +25,19 @@ export const addProductToCart = async (req, res) => {
           .json({ is_success: true, message: "Item removed from cart" });
       } else {
         existingCartItem.quantity = newQuantity;
+
         await existingCartItem.save();
         res.status(200).json({ is_success: true, data: existingCartItem });
       }
     } else {
       // If it doesn't exist, create a new cart item
+
+      if (quantity <= 0) {
+        return res.status(400).json({
+          is_success: false,
+          message: "Quantity must be greater than 0",
+        });
+      }
       const newItem = new Cart({
         userId: userId,
         foodId,
