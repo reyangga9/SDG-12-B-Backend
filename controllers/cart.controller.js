@@ -116,7 +116,7 @@ export const getItemsInCartForUser = async (req, res) => {
 
     const itemsInCart = await Cart.find({ userId }).populate({
       path: "foodId",
-      select: "makanan _id harga restoId",
+      select: "makanan _id harga restoId gambarMakanan",
       model: "Food", // Assuming the model name is 'Food'
     });
 
@@ -125,6 +125,7 @@ export const getItemsInCartForUser = async (req, res) => {
         .status(500)
         .json({ is_success: false, message: "User doesnt have any cart" });
     }
+    console.log("itemsincart", itemsInCart);
     const food = itemsInCart
       .filter((item) => item.foodId) // Filter out entries with null foodId
       .map((item) => ({
@@ -133,12 +134,13 @@ export const getItemsInCartForUser = async (req, res) => {
         harga: item.foodId.harga,
         restoId: item.foodId.restoId,
         quantity: item.quantity,
+        gambarMakanan: item.foodId.gambarMakanan,
       }));
 
     const resto = await Restaurant.find({
       _id: itemsInCart[0].foodId.restoId,
     }).select("nama alamat kota");
-    console.log(resto);
+    console.log(food);
 
     res.status(200).json({
       is_success: true,
