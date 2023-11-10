@@ -155,12 +155,21 @@ export const getRestaurantByIdAndFood = async (req, res) => {
     const avgRating = calculateAverageRating(restaurants);
     restaurants = { ...restaurants._doc, avgRating };
 
+    const foodWithDiscount = getAllFoodByRestaurant.map((food) => {
+      const hargaDiscount =
+        (food.harga * (100 - food.discountPercentage)) / 100;
+      return { ...food._doc, hargaDiscount };
+    });
+
+    console.log(foodWithDiscount);
+
+    console.log(getAllFoodByRestaurant);
     restaurants = await fetchUserName(restaurants, User);
 
     res.status(201).json({
       is_success: true,
       restaurant: restaurants,
-      food: getAllFoodByRestaurant,
+      food: foodWithDiscount,
     });
   } catch (error) {
     res.status(500).json({ message: error + message_error });
