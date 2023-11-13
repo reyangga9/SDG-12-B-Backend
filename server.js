@@ -9,6 +9,7 @@ import userRoute from "./routes/user.route.js";
 import restaurantRoute from "./routes/restaurant.route.js";
 import menuRoute from "./routes/menu.route.js";
 import cartRoute from "./routes/cart.route.js";
+import transactionRoute from "./routes/transaction.route.js";
 
 const app = express();
 const port = process.env.PORT || 8800;
@@ -34,6 +35,7 @@ app.use("/api/users", userRoute);
 app.use("/api/menus", menuRoute);
 app.use("/api/restaurant", restaurantRoute);
 app.use("/api/cart", cartRoute);
+app.use("/api/transaction", transactionRoute);
 
 app.listen(port, () => {
   connectDb();

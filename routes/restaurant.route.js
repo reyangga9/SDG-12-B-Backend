@@ -7,7 +7,7 @@ import {
   getRestaurantRandom,
   highestSells,
   mostLoved,
-  searchCategory,
+  getRestaurantsByParams,
 } from "../controllers/restaurant.controller.js";
 
 const router = express.Router();
@@ -18,7 +18,7 @@ router.get("/mostLoved", mostLoved);
 router.get("/random", getRestaurantRandom);
 router.get("/restoandfood/:id", getRestaurantByIdAndFood);
 router.post("/createRestaurant", createRestaurant);
-router.get("/search/:category", searchCategory);
+router.get("/search/:id", getRestaurantsByParams);
 router.get("/:id", getRestaurantById);
 
 export default router;

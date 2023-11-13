@@ -190,3 +190,36 @@ export const getRestaurantRandom = async (req, res) => {
     res.status(500).json({ message: error + message_error });
   }
 };
+
+export const getRestaurantsByParams = async (req, res) => {
+  try {
+    console.log(req.params.id);
+    const restaurantName = req.params.id;
+
+    // Use regex to perform a case-insensitive search
+    const regex = new RegExp(restaurantName, "i");
+    let restaurants = await Restaurant.find({ nama: regex });
+
+    if (restaurants.length === 0) {
+      return res.status(404).json({ message: "No restaurants found" });
+    }
+
+    // Calculate average rating for each restaurant
+    const avgRatings = restaurants.map(calculateAverageRating);
+
+    // Combine the restaurants with their respective average ratings
+    const restaurantsWithAvgRating = restaurants.map((restaurant, index) => ({
+      ...restaurant._doc,
+      avgRating: avgRatings[index],
+    }));
+
+    res
+      .status(200)
+      .json({ is_success: true, restaurant: restaurantsWithAvgRating });
+  } catch (error) {
+    console.error(error);
+    res
+      .status(500)
+      .json({ message: `Internal Server Error: ${error.message}` });
+  }
+};
