@@ -9,6 +9,7 @@ export const addProductToCart = async (req, res) => {
     // Assuming you have middleware that decodes the user information from the token
 
     const userId = req.user._id; // Adjust this according to your middleware
+    console.log(userId);
 
     const { foodId, quantity } = req.body;
 

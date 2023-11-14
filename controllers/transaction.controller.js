@@ -4,7 +4,9 @@ import Food from "../models/Food.models.js";
 
 export const createTransaction = async (req, res) => {
   try {
-    const userId = req.user._id;
+    // const userId = req.user._id;
+    const userId = req.user._id; // Adjust this according to your middleware
+    console.log("useridOKEOEOEKOOE", userId);
     const { cartItems } = req.body;
 
     // Calculate total amount and create items array

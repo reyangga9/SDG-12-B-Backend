@@ -4,7 +4,6 @@ import { hashPassword, generateJwtToken } from "../utils/auth.utils.js";
 import bcrypt from "bcryptjs";
 import { message_error } from "./constant.js";
 import jwt from "jsonwebtoken";
-import cookie from "cookie";
 
 export const createUser = async (req, res) => {
   const { username, email, password } = req.body;
