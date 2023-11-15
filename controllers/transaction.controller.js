@@ -1,6 +1,7 @@
 // Transaction.controller.js
 import Transaction from "../models/Transaction.models.js";
 import Food from "../models/Food.models.js";
+import { calculateDiscountedPrice } from "../utils/discountPrice.js";
 
 export const createTransaction = async (req, res) => {
   try {
@@ -19,17 +20,24 @@ export const createTransaction = async (req, res) => {
         return res.status(404).json({ error: "Food item not found" });
       }
 
+      const hargaDiscount = calculateDiscountedPrice(
+        food.harga,
+        food.discountPercentage
+      );
+
       if (cartItem.quantity > food.stokMakanan) {
         return res
           .status(400)
           .json({ error: "Insufficient stock for one or more items" });
       }
 
+      console.log(hargaDiscount);
       items.push({
         foodId: food._id,
         makanan: food.makanan,
         quantity: cartItem.quantity,
-        subtotal: cartItem.quantity * food.harga,
+        hargaDiscount: hargaDiscount,
+        subtotal: cartItem.quantity * hargaDiscount,
       });
 
       // Update stock quantity
