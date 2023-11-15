@@ -25,7 +25,6 @@ export const createTransaction = async (req, res) => {
           .json({ error: "Insufficient stock for one or more items" });
       }
 
-      console.log(food.makanan);
       items.push({
         foodId: food._id,
         makanan: food.makanan,

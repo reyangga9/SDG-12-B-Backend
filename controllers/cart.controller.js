@@ -1,5 +1,6 @@
 import Cart from "../models/Cart.models.js";
 import Restaurant from "../models/Restaurant.models.js";
+import { calculateDiscountedPrice } from "../utils/discountPrice.js";
 
 import { message_error } from "./constant.js";
 
@@ -124,7 +125,7 @@ export const getItemsInCartForUser = async (req, res) => {
 
     const itemsInCart = await Cart.find({ userId }).populate({
       path: "foodId",
-      select: "makanan _id harga restoId gambarMakanan",
+      select: "makanan _id harga restoId gambarMakanan discountPercentage",
       model: "Food", // Assuming the model name is 'Food'
     });
 
@@ -134,16 +135,28 @@ export const getItemsInCartForUser = async (req, res) => {
         .json({ is_success: false, message: "User doesnt have any cart" });
     }
 
+    console.log(itemsInCart);
+
     const food = itemsInCart
-      .filter((item) => item.foodId) // Filter out entries with null foodId
-      .map((item) => ({
-        _id: item.foodId._id,
-        makanan: item.foodId.makanan,
-        harga: item.foodId.harga,
-        restoId: item.foodId.restoId,
-        quantity: item.quantity,
-        gambarMakanan: item.foodId.gambarMakanan,
-      }));
+      .filter((item) => item.foodId)
+      .map((item) => {
+        const hargaDiscount = calculateDiscountedPrice(
+          item.foodId.harga,
+          item.foodId.discountPercentage
+        );
+
+        return {
+          _id: item.foodId._id,
+          makanan: item.foodId.makanan,
+          harga: item.foodId.harga,
+          hargaDiscount: hargaDiscount,
+          restoId: item.foodId.restoId,
+          quantity: item.quantity,
+          discountPercentage: item.foodId.discountPercentage,
+          gambarMakanan: item.foodId.gambarMakanan,
+        };
+      });
+    console.log(food);
 
     const resto = await Restaurant.find({
       _id: itemsInCart[0].foodId.restoId,
