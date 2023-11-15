@@ -82,10 +82,9 @@ export const getTransactionsByUserId = async (req, res) => {
 };
 
 export const updateTransactionByUserId = async (req, res) => {
-  const userId = req.user._id;
-  console.log(userId);
+  const userId = req.user?._id;
   const transactionId = req.params.transactionId;
-  const { rating, comment } = req.body; // Assuming the rating and comment are sent in the request body
+  const { rating, comment } = req.body;
 
   if (!userId) {
     return res
@@ -98,7 +97,7 @@ export const updateTransactionByUserId = async (req, res) => {
     const updatedTransaction = await Transaction.findByIdAndUpdate(
       { _id: transactionId, userId },
       { $set: { isCompleted: true } },
-      { new: true } // This option returns the modified document
+      { new: true }
     );
 
     if (!updatedTransaction) {
@@ -107,30 +106,39 @@ export const updateTransactionByUserId = async (req, res) => {
 
     const restaurantId = updatedTransaction.restoId;
 
-    // Update the restaurant's rating
-    const updatedRestaurant = await Restaurant.findOneAndUpdate(
-      { _id: restaurantId },
-      {
-        $push: {
-          rating: {
-            userId,
-            rating,
-            comment,
+    // Update the restaurant's rating only if rating and comment are defined
+    if (rating !== undefined && comment !== undefined) {
+      const updatedRestaurant = await Restaurant.findOneAndUpdate(
+        { _id: restaurantId },
+        {
+          $push: {
+            rating: {
+              userId,
+              rating,
+              comment,
+            },
           },
         },
-      },
-      { new: true }
-    );
+        { new: true }
+      );
 
-    if (!updatedRestaurant) {
-      return res.status(404).json({ error: "Restaurant not found" });
+      if (!updatedRestaurant) {
+        return res.status(404).json({ error: "Restaurant not found" });
+      }
+
+      res.status(200).json({
+        transaction: updatedTransaction,
+        restaurant: updatedRestaurant,
+      });
+    } else {
+      res.status(200).json({
+        transaction: updatedTransaction,
+        message:
+          "Transaction updated, but rating and comment not provided for the restaurant.",
+      });
     }
-
-    res
-      .status(200)
-      .json({ transaction: updatedTransaction, restaurant: updatedRestaurant });
   } catch (error) {
     console.error("Error updating transaction:", error);
-    res.status(500).json({ error: error });
+    res.status(500).json({ error: "Internal Server Error" });
   }
 };
