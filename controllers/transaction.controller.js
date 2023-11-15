@@ -2,12 +2,14 @@
 import Transaction from "../models/Transaction.models.js";
 import Food from "../models/Food.models.js";
 import { calculateDiscountedPrice } from "../utils/discountPrice.js";
+import Restaurant from "../models/Restaurant.models.js";
 
 export const createTransaction = async (req, res) => {
   try {
     // const userId = req.user._id;
     const userId = req.user._id; // Adjust this according to your middleware
 
+    let restoId;
     const { cartItems } = req.body;
 
     // Calculate total amount and create items array
@@ -19,6 +21,7 @@ export const createTransaction = async (req, res) => {
       if (!food) {
         return res.status(404).json({ error: "Food item not found" });
       }
+      restoId = food.restoId;
 
       const hargaDiscount = calculateDiscountedPrice(
         food.harga,
@@ -31,7 +34,7 @@ export const createTransaction = async (req, res) => {
           .json({ error: "Insufficient stock for one or more items" });
       }
 
-      console.log(hargaDiscount);
+      // console.log(hargaDiscount);
       items.push({
         foodId: food._id,
         makanan: food.makanan,
@@ -52,6 +55,7 @@ export const createTransaction = async (req, res) => {
       userId,
       items,
       totalAmount,
+      restoId,
     });
 
     // Clear the items from the user's cart or mark them as ordered
@@ -73,13 +77,21 @@ export const getTransactionsByUserId = async (req, res) => {
     res.status(200).json({ transactions });
   } catch (error) {
     console.error("Error fetching transactions:", error);
-    res.status(500).json({ error: "Internal Server Error" });
+    res.status(500).json({ error: error });
   }
 };
 
 export const updateTransactionByUserId = async (req, res) => {
   const userId = req.user._id;
+  console.log(userId);
   const transactionId = req.params.transactionId;
+  const { rating, comment } = req.body; // Assuming the rating and comment are sent in the request body
+
+  if (!userId) {
+    return res
+      .status(401)
+      .json({ error: "Unauthorized: User not authenticated" });
+  }
 
   try {
     // Find and update the specific transaction
@@ -93,9 +105,32 @@ export const updateTransactionByUserId = async (req, res) => {
       return res.status(404).json({ error: "Transaction not found" });
     }
 
-    res.status(200).json({ transaction: updatedTransaction });
+    const restaurantId = updatedTransaction.restoId;
+
+    // Update the restaurant's rating
+    const updatedRestaurant = await Restaurant.findOneAndUpdate(
+      { _id: restaurantId },
+      {
+        $push: {
+          rating: {
+            userId,
+            rating,
+            comment,
+          },
+        },
+      },
+      { new: true }
+    );
+
+    if (!updatedRestaurant) {
+      return res.status(404).json({ error: "Restaurant not found" });
+    }
+
+    res
+      .status(200)
+      .json({ transaction: updatedTransaction, restaurant: updatedRestaurant });
   } catch (error) {
     console.error("Error updating transaction:", error);
-    res.status(500).json({ error: "Internal Server Error" });
+    res.status(500).json({ error: error });
   }
 };

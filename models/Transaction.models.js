@@ -29,6 +29,11 @@ const TransactionSchema = new mongoose.Schema(
         },
       },
     ],
+    restoId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Restairant",
+      required: true,
+    },
     totalAmount: {
       type: Number,
       required: true,
