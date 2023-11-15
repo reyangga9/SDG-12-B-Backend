@@ -57,7 +57,7 @@ export const createTransaction = async (req, res) => {
     // Clear the items from the user's cart or mark them as ordered
     // This logic depends on how you've implemented the Cart model
 
-    res.status(201).json({ transaction });
+    res.status(200).json({ transaction });
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: "Internal Server Error" });
