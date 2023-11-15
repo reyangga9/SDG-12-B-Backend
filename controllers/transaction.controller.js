@@ -6,7 +6,7 @@ export const createTransaction = async (req, res) => {
   try {
     // const userId = req.user._id;
     const userId = req.user._id; // Adjust this according to your middleware
-    // console.log("useridOKEOEOEKOOE", userId);
+
     const { cartItems } = req.body;
 
     // Calculate total amount and create items array
@@ -25,8 +25,10 @@ export const createTransaction = async (req, res) => {
           .json({ error: "Insufficient stock for one or more items" });
       }
 
+      console.log(food.makanan);
       items.push({
         foodId: food._id,
+        makanan: food.makanan,
         quantity: cartItem.quantity,
         subtotal: cartItem.quantity * food.harga,
       });
@@ -57,7 +59,6 @@ export const createTransaction = async (req, res) => {
 
 export const getTransactionsByUserId = async (req, res) => {
   const userId = req.user._id;
-  console.log(userId);
 
   try {
     const transactions = await Transaction.find({ userId }).exec();

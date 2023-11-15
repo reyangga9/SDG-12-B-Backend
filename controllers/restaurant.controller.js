@@ -161,9 +161,6 @@ export const getRestaurantByIdAndFood = async (req, res) => {
       return { ...food._doc, hargaDiscount };
     });
 
-    console.log(foodWithDiscount);
-
-    console.log(getAllFoodByRestaurant);
     restaurants = await fetchUserName(restaurants, User);
 
     res.status(201).json({
@@ -193,7 +190,6 @@ export const getRestaurantRandom = async (req, res) => {
 
 export const getRestaurantsByParams = async (req, res) => {
   try {
-    console.log(req.params.id);
     const restaurantName = req.params.id;
 
     // Use regex to perform a case-insensitive search

@@ -9,7 +9,6 @@ export const addProductToCart = async (req, res) => {
     // Assuming you have middleware that decodes the user information from the token
 
     const userId = req.user._id; // Adjust this according to your middleware
-    console.log(userId);
 
     const { foodId, quantity } = req.body;
 
@@ -134,7 +133,7 @@ export const getItemsInCartForUser = async (req, res) => {
         .status(500)
         .json({ is_success: false, message: "User doesnt have any cart" });
     }
-    console.log("itemsincart", itemsInCart);
+
     const food = itemsInCart
       .filter((item) => item.foodId) // Filter out entries with null foodId
       .map((item) => ({
@@ -149,7 +148,6 @@ export const getItemsInCartForUser = async (req, res) => {
     const resto = await Restaurant.find({
       _id: itemsInCart[0].foodId.restoId,
     }).select("nama alamat kota");
-    console.log(food);
 
     res.status(200).json({
       is_success: true,

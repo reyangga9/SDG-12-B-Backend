@@ -15,6 +15,10 @@ const TransactionSchema = new mongoose.Schema(
           ref: "Food",
           required: true,
         },
+        makanan: {
+          type: String,
+          required: true,
+        },
         quantity: {
           type: Number,
           required: true,
