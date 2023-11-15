@@ -39,5 +39,5 @@ app.use("/api/transaction", transactionRoute);
 
 app.listen(port, () => {
   connectDb();
-  console.log(`server berjalana di port ${port}`);
+  console.log(`server berjalanan di port ${port}`);
 });

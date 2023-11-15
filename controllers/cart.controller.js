@@ -130,9 +130,13 @@ export const getItemsInCartForUser = async (req, res) => {
     });
 
     if (itemsInCart.length === 0) {
-      return res
-        .status(500)
-        .json({ is_success: false, message: "User doesnt have any cart" });
+      // Handle the case where the cart is empty
+      return res.status(200).json({
+        is_success: true,
+        userId,
+        resto: null, // No need to fetch restaurant data when the cart is empty
+        food: [], // Return an empty array for food
+      });
     }
 
     console.log(itemsInCart);
