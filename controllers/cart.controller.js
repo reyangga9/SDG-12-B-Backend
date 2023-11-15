@@ -129,14 +129,6 @@ export const getItemsInCartForUser = async (req, res) => {
       model: "Food", // Assuming the model name is 'Food'
     });
 
-    if (itemsInCart.length === 0) {
-      return res
-        .status(500)
-        .json({ is_success: false, message: "User doesnt have any cart" });
-    }
-
-    console.log(itemsInCart);
-
     const food = itemsInCart
       .filter((item) => item.foodId)
       .map((item) => {
