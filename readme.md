@@ -1,5 +1,3 @@
-Absolutely, here's the corrected content with proper YAML syntax:
-
 ```yaml
 ---
 
