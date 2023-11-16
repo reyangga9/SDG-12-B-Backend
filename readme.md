@@ -1,11 +1,10 @@
-```
 
 # Food Guardian 
 
 ## Description
 
 Using Express.js, the backend exposes a set of well-defined API endpoints that facilitate communication with the frontend. These endpoints handle various operations such as fetching food items, managing user carts, processing transactions, retrieving restaurant details, and handling user authentication.
-```
+
 
 ## Installation
 
