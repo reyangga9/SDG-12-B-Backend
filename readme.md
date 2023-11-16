@@ -4,11 +4,9 @@
 
 ## Description
 
-Blablabla
+Using Express.js, the backend exposes a set of well-defined API endpoints that facilitate communication with the frontend. These endpoints handle various operations such as fetching food items, managing user carts, processing transactions, retrieving restaurant details, and handling user authentication.
 
 ## Installation
-
-Describe the steps needed to install your project and its dependencies. For example:
 
 ```bash
 # Clone the repository
@@ -20,7 +18,7 @@ npm install
 
 ## Usage
 
-Explain this
+The backend of Food Guardian provides a set of RESTful API endpoints that can be accessed to perform various operations related to managing users, food items, transactions, and more. Below are some examples and guidelines on how to interact with these endpoints:
 
 ### Models
 
@@ -42,17 +40,10 @@ Explain this
 - **User**
   - Schema for user accounts with details like username, email, and account privileges.
 
-### Example Usage
+### Postman Link Usage
 
-```javascript
-// Example usage of the Cart model
-import Cart from './models/Cart';
+https://universal-space-959162.postman.co/workspace/Capston-project-SDG-12-B~a9e9a6b0-9eb2-488e-bf0f-0ae0be3b5bda/collection/23720588-8f2a26be-ffca-4990-ae5b-a552d6a3a6aa?action=share&creator=23720588
 
-// Perform operations with the Cart model
-// ...
-
-// Similar examples for other models
-```
 
 ## Credits
 
