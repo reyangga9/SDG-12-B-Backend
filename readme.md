@@ -40,7 +40,7 @@ The backend of Food Guardian provides a set of RESTful API endpoints that can be
 - User:
     description: Schema for user accounts with details like username, email, and account privileges.
 
-### Postman Link Usage
+### Postman Endpoint 
 
 https://universal-space-959162.postman.co/workspace/Capston-project-SDG-12-B~a9e9a6b0-9eb2-488e-bf0f-0ae0be3b5bda/collection/23720588-8f2a26be-ffca-4990-ae5b-a552d6a3a6aa?action=share&creator=23720588
 
